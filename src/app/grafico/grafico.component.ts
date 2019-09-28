@@ -23,8 +23,9 @@ noData(Highcharts);
 export class GraficoComponent implements OnInit {
   public options: any = {
     chart: {
-      type: 'scatter',
-      height: 700
+      type: 'spline',
+      animation: true, // don't animate in old IE
+      marginRight: 10,
     },
     title: {
       text: 'Grafica'
@@ -58,11 +59,14 @@ export class GraficoComponent implements OnInit {
       }
     ]
   }
+
   routeSubscription: Subscription;
+
   constructor(
     private route: ActivatedRoute,
     private graficoService: GraficoService,
-  ) { }
+  ) {
+   }
 
   ngOnInit() {
     this.routeSubscription = this.route.paramMap.subscribe(params => {
