@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import { interval, Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { GraficoService } from '../_services/grafico.service';
 
 declare var require: any;
 let Boost = require('highcharts/modules/boost');
@@ -56,19 +58,26 @@ export class GraficoComponent implements OnInit {
       }
     ]
   }
-  subscription: Subscription;
-  constructor(private http: HttpClient) { }
+  routeSubscription: Subscription;
+  constructor(
+    private route: ActivatedRoute,
+    private graficoService: GraficoService,
+  ) { }
 
   ngOnInit() {
-    const source = interval(10000);
+    this.routeSubscription = this.route.paramMap.subscribe(params => {
+      this.loadGraphData().then(res => {
+        console.log(res);
+      });
+    });
+  }
 
-    const apiLink = 'https://api.myjson.com/bins/13lnf4';
-
-    this.subscription = source.subscribe(val => this.getApiResponse(apiLink).then(
-      data => {
+  loadGraphData(): Promise<any> {
+    return new Promise((resolve) => {
+      this.graficoService.loadGraphData().subscribe(response => {
         const updated_normal_data = [];
         const updated_abnormal_data = [];
-        data.forEach(row => {
+        response.forEach(row => {
           const temp_row = [
             new Date(row.timestamp).getTime(),
             row.value
@@ -79,16 +88,10 @@ export class GraficoComponent implements OnInit {
         this.options.series[1]['data'] = updated_abnormal_data;
         Highcharts.chart('container', this.options);
       },
-      error => {
-        console.log(error)
-      })
-    )
-  }
-
-  getApiResponse(url) {
-    return this.http.get<any>(url, {})
-      .toPromise().then(res => {
-        return res;
-      });
+        error => {
+          console.log(error)
+        })
+      resolve('ok')
+    })
   }
 }
