@@ -1,8 +1,39 @@
-<div id="main-head" style="text-align:center">
-  <h1>
-    {{ title }}!
-  </h1>
-  <div>
-    <app-grafico></app-grafico>
-  </div>
+
+
+<!-- MAIN -->
+<div class="container">
+    <h1>Mediciones electromiográficas: Sujeto #1</h1>
+    <div class="row">
+        <div class="col">
+            <canvas baseChart
+            [datasets]="barChartData"
+            [labels]="barChartLabels"
+            [options]="barChartOptions"
+            [legend]="barChartLegend"
+            [chartType]="barChartType"></canvas>
+        </div>
+        <div class="col">
+            <canvas baseChart
+            [datasets]="barChartData"
+            [labels]="barChartLabels"
+            [options]="barChartOptions"
+            [legend]="barChartLegend"
+            [chartType]="barChartType"></canvas>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <form>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Cédula</label>
+                    <input type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Ingrese número de cédula del sujeto">
+                </div>
+                <button type="submit" class="btn btn-info btn-lg float-right">Buscar</button>
+            </form>
+        </div>
+    </div>
+
 </div>
+
+<router-outlet></router-outlet>
